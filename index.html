@@ -134,11 +134,12 @@
             height: 100%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             z-index: 100;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             flex-direction: column;
             text-align: center;
-            padding: 20px;
+            padding: 40px 20px;
+            overflow-y: auto;
         }
 
         .celebration-screen.active {
@@ -191,6 +192,32 @@
         @keyframes megaBounce {
             0%, 100% { transform: scale(1) rotate(-2deg); }
             50% { transform: scale(1.1) rotate(2deg); }
+        }
+
+        .love-message {
+            max-width: 600px;
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.8;
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            animation: fadeInUp 2s ease-out;
+            font-family: 'Georgia', serif;
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Fireworks Canvas */
@@ -265,6 +292,9 @@
         <img src="Lincoln with Glasses.png" alt="Our adorable dog!" class="dog-image" id="dogImage">
         <div class="celebration-text">LET'S GOOO 🎉</div>
         <div class="celebration-text big-chungus">BIG CHUNGUS!</div>
+        <div class="love-message">
+            I love you so much. You're my whole entire world and you're the best dog mom in the world! You go through so much in your life yet you still are able to keep moving forward, and that makes you one of the strongest and most resilient people I know. You have made me a better man, person, friend, son. I owe so much of my life to you, and I wouldn't have asked for a better woman in my life. Thank you and I love you! I'm so glad you will be my valentine this year! ❤️
+        </div>
     </div>
 
     <!-- Fireworks Canvas -->
