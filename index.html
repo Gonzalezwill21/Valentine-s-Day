@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Will You Be My Valentine?</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -46,7 +46,6 @@
             50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.6); }
         }
 
-        /* Shooting star */
         .shooting-star {
             position: absolute;
             width: 4px;
@@ -86,17 +85,11 @@
         }
 
         @keyframes floatUp {
-            0% {
-                transform: translateY(100vh) translateX(0) rotate(0deg) scale(0.5);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) translateX(0) rotate(0deg) scale(0.5); opacity: 0; }
             10% { opacity: 0.5; }
             50% { transform: translateY(50vh) translateX(30px) rotate(180deg) scale(1); }
             90% { opacity: 0.5; }
-            100% {
-                transform: translateY(-100px) translateX(-20px) rotate(360deg) scale(0.5);
-                opacity: 0;
-            }
+            100% { transform: translateY(-100px) translateX(-20px) rotate(360deg) scale(0.5); opacity: 0; }
         }
 
         /* ===== QUESTION SCREEN ===== */
@@ -177,9 +170,7 @@
             animation: shimmerGold 3s ease-in-out infinite;
             color: white;
             transform: scale(1);
-            box-shadow:
-                0 8px 25px rgba(245, 175, 25, 0.5),
-                0 0 30px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 8px 25px rgba(245, 175, 25, 0.5), 0 0 30px rgba(255, 215, 0, 0.3);
         }
 
         @keyframes shimmerGold {
@@ -190,9 +181,7 @@
 
         .btn-yes:hover {
             transform: scale(1.1);
-            box-shadow:
-                0 12px 40px rgba(245, 175, 25, 0.7),
-                0 0 50px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 12px 40px rgba(245, 175, 25, 0.7), 0 0 50px rgba(255, 215, 0, 0.5);
         }
 
         .btn-no {
@@ -208,9 +197,7 @@
             50% { box-shadow: 0 8px 25px rgba(220, 20, 60, 0.8), 0 0 20px rgba(220, 20, 60, 0.3); }
         }
 
-        .btn-no:hover {
-            box-shadow: 0 12px 35px rgba(220, 20, 60, 0.8);
-        }
+        .btn-no:hover { box-shadow: 0 12px 35px rgba(220, 20, 60, 0.8); }
 
         .btn-no.running {
             position: fixed;
@@ -221,138 +208,258 @@
         .celebration-screen {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #ff6b9d, #c44dff, #6b5bff, #ff6b9d);
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, #1a0a2e, #2d1b69, #44107a, #67318e);
             background-size: 400% 400%;
-            animation: gradientShift 8s ease infinite;
+            animation: gradientShift 10s ease infinite;
             z-index: 100;
             justify-content: flex-start;
             align-items: center;
             flex-direction: column;
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 20px;
             overflow-y: auto;
         }
 
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
-            25% { background-position: 100% 50%; }
+            25% { background-position: 100% 0%; }
             50% { background-position: 50% 100%; }
-            75% { background-position: 0% 50%; }
+            75% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        .celebration-screen.active {
-            display: flex;
+        .celebration-screen.active { display: flex; }
+
+        /* White flash overlay */
+        .flash-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: white;
+            z-index: 200;
+            animation: flashBang 0.8s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes flashBang {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* Stage 1: Photo with glowing frame */
+        .photo-frame {
+            position: relative;
+            padding: 6px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, #ffd700, #ff69b4, #ffd700, #ff1493, #ffd700);
+            background-size: 300% 300%;
+            animation: dropIn 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both,
+                       borderShimmer 3s linear infinite;
+            box-shadow:
+                0 0 30px rgba(255, 215, 0, 0.4),
+                0 0 60px rgba(255, 105, 180, 0.2),
+                0 20px 60px rgba(0, 0, 0, 0.4);
+            margin-bottom: 25px;
+        }
+
+        @keyframes borderShimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .photo-frame::after {
+            content: '';
+            position: absolute;
+            top: -4px; left: -4px; right: -4px; bottom: -4px;
+            border-radius: 28px;
+            background: inherit;
+            background-size: inherit;
+            animation: inherit;
+            filter: blur(15px);
+            opacity: 0.6;
+            z-index: -1;
         }
 
         .dog-image {
-            max-width: 300px;
-            max-height: 300px;
+            display: block;
+            max-width: 280px;
+            max-height: 280px;
             border-radius: 20px;
-            box-shadow:
-                0 15px 50px rgba(0, 0, 0, 0.4),
-                0 0 30px rgba(255, 255, 255, 0.3);
-            animation: bounce 1s ease-in-out infinite;
-            margin-bottom: 30px;
-            border: 5px solid white;
+            object-fit: cover;
         }
 
-        @keyframes bounce {
+        @keyframes dropIn {
+            0% { opacity: 0; transform: translateY(-80vh) scale(0.3) rotate(-10deg); }
+            60% { opacity: 1; transform: translateY(20px) scale(1.05) rotate(2deg); }
+            80% { transform: translateY(-10px) scale(0.98) rotate(-1deg); }
+            100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
+        }
+
+        /* Gentle float after drop-in */
+        .photo-frame.settled {
+            animation: gentleFloat 4s ease-in-out infinite, borderShimmer 3s linear infinite;
+        }
+
+        @keyframes gentleFloat {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+            50% { transform: translateY(-12px); }
         }
 
-        .celebration-text {
+        /* Stage 2: Text entries */
+        .lets-go-text {
             font-family: 'Dancing Script', cursive;
-            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-size: clamp(2.5rem, 10vw, 4.5rem);
+            font-weight: 700;
             color: white;
+            letter-spacing: 4px;
             text-shadow:
-                4px 4px 8px rgba(0, 0, 0, 0.4),
-                0 0 20px rgba(255, 255, 255, 0.3);
-            margin: 15px 0;
-            animation: rainbow 2s linear infinite, shake 0.5s ease-in-out infinite;
+                4px 4px 8px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(255, 215, 0, 0.5),
+                0 0 80px rgba(255, 105, 180, 0.3);
+            margin-bottom: 15px;
+            animation: slideInLeft 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.8s both,
+                       rainbow 2.5s linear 2.5s infinite;
+        }
+
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-100vw) rotate(-5deg); }
+            70% { transform: translateX(20px) rotate(1deg); }
+            100% { opacity: 1; transform: translateX(0) rotate(0); }
         }
 
         @keyframes rainbow {
             0% { color: #ff6b6b; }
-            25% { color: #ffd93d; }
-            50% { color: #6bcb77; }
-            75% { color: #4d96ff; }
+            20% { color: #ffd93d; }
+            40% { color: #6bcb77; }
+            60% { color: #4d96ff; }
+            80% { color: #ff69b4; }
             100% { color: #ff6b6b; }
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0) rotate(0); }
-            25% { transform: translateX(-5px) rotate(-2deg); }
-            75% { transform: translateX(5px) rotate(2deg); }
+        .big-chungus-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 9vw, 4rem);
+            font-weight: 700;
+            color: #ffd700;
+            letter-spacing: 3px;
+            text-shadow:
+                3px 3px 0 #ff69b4,
+                6px 6px 0 rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 215, 0, 0.6);
+            margin-bottom: 30px;
+            animation: smashIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 2.5s both;
         }
 
-        .big-chungus {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 12vw, 6rem);
-            font-weight: bold;
-            animation: rainbow 1s linear infinite, megaBounce 0.3s ease-in-out infinite;
+        .big-chungus-text.settled {
+            animation: megaBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes smashIn {
+            0% { opacity: 0; transform: scale(4) rotate(10deg); filter: blur(10px); }
+            50% { opacity: 1; transform: scale(0.85) rotate(-3deg); filter: blur(0); }
+            70% { transform: scale(1.1) rotate(1deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0); }
         }
 
         @keyframes megaBounce {
-            0%, 100% { transform: scale(1) rotate(-2deg); }
-            50% { transform: scale(1.1) rotate(2deg); }
+            0%, 100% { transform: scale(1) rotate(-1deg); }
+            25% { transform: scale(1.05) rotate(1deg); }
+            50% { transform: scale(1) rotate(-1deg); }
+            75% { transform: scale(1.03) rotate(0.5deg); }
         }
 
-        .love-message {
-            max-width: 600px;
-            font-size: clamp(1rem, 3vw, 1.3rem);
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            line-height: 1.8;
-            margin-top: 30px;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            animation: fadeInUp 2s ease-out;
+        /* Stage 3: Love message card */
+        .love-card-wrapper {
+            animation: riseIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3.5s both;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 620px;
+        }
+
+        @keyframes riseIn {
+            0% { opacity: 0; transform: translateY(60px) scale(0.95); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .love-card {
+            position: relative;
+            padding: 35px 30px 25px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 0 40px rgba(255, 105, 180, 0.08);
+        }
+
+        /* Gradient border glow behind the card */
+        .love-card::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 26px;
+            background: linear-gradient(135deg, #ffd700, #ff69b4, #c44dff, #ffd700);
+            background-size: 300% 300%;
+            animation: borderShimmer 4s linear infinite;
+            z-index: -1;
+            opacity: 0.4;
+            filter: blur(3px);
+        }
+
+        .love-card-quote {
+            font-size: 3rem;
+            line-height: 1;
+            color: rgba(255, 215, 0, 0.3);
+            font-family: 'Dancing Script', cursive;
+            margin-bottom: -10px;
+        }
+
+        .love-card p {
             font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+            color: rgba(255, 255, 255, 0.92);
+            line-height: 1.9;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
         }
 
-        @keyframes fadeInUp {
-            0% {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .love-card-divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffd700, #ff69b4, #ffd700, transparent);
+            margin: 20px auto;
+            border-radius: 2px;
+        }
+
+        .love-card-footer {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.2rem;
+            color: rgba(255, 215, 0, 0.7);
+            letter-spacing: 2px;
         }
 
         /* ===== FIREWORKS CANVAS ===== */
         #fireworks {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             pointer-events: none;
             z-index: 99;
             display: none;
         }
 
-        #fireworks.active {
-            display: block;
-        }
+        #fireworks.active { display: block; }
 
         /* ===== CELEBRATION HEARTS ===== */
         .celebration-hearts {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             pointer-events: none;
             z-index: 102;
             overflow: hidden;
@@ -365,27 +472,16 @@
         }
 
         @keyframes celebrateFloat {
-            0% {
-                transform: translateY(100vh) scale(0) rotate(0deg);
-                opacity: 0;
-            }
-            20% {
-                opacity: 1;
-                transform: translateY(80vh) scale(1) rotate(45deg);
-            }
-            100% {
-                transform: translateY(-100px) scale(1.5) rotate(360deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; transform: translateY(80vh) scale(1) rotate(45deg); }
+            100% { transform: translateY(-100px) scale(1.5) rotate(360deg); opacity: 0; }
         }
 
         /* ===== FLOATING DUCKS ===== */
         .floating-ducks {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             pointer-events: none;
             z-index: 103;
             overflow: hidden;
@@ -398,43 +494,28 @@
         }
 
         @keyframes duckSwim {
-            0% {
-                transform: translateX(-80px) translateY(0) scaleX(1);
-                opacity: 0;
-            }
+            0% { transform: translateX(-80px) translateY(0); opacity: 0; }
             5% { opacity: 1; }
-            25% { transform: translateX(25vw) translateY(-20px) scaleX(1); }
-            50% { transform: translateX(50vw) translateY(15px) scaleX(1); }
-            75% { transform: translateX(75vw) translateY(-10px) scaleX(1); }
+            25% { transform: translateX(25vw) translateY(-20px); }
+            50% { transform: translateX(50vw) translateY(15px); }
+            75% { transform: translateX(75vw) translateY(-10px); }
             95% { opacity: 1; }
-            100% {
-                transform: translateX(105vw) translateY(5px) scaleX(1);
-                opacity: 0;
-            }
+            100% { transform: translateX(105vw) translateY(5px); opacity: 0; }
         }
 
-        /* Some ducks swim right-to-left */
-        .duck.reverse {
-            animation-name: duckSwimReverse;
-        }
+        .duck.reverse { animation-name: duckSwimReverse; }
 
         @keyframes duckSwimReverse {
-            0% {
-                transform: translateX(105vw) translateY(0) scaleX(-1);
-                opacity: 0;
-            }
+            0% { transform: translateX(105vw) translateY(0) scaleX(-1); opacity: 0; }
             5% { opacity: 1; }
             25% { transform: translateX(75vw) translateY(-15px) scaleX(-1); }
             50% { transform: translateX(50vw) translateY(20px) scaleX(-1); }
             75% { transform: translateX(25vw) translateY(-10px) scaleX(-1); }
             95% { opacity: 1; }
-            100% {
-                transform: translateX(-80px) translateY(5px) scaleX(-1);
-                opacity: 0;
-            }
+            100% { transform: translateX(-80px) translateY(5px) scaleX(-1); opacity: 0; }
         }
 
-        /* ===== SPARKLES ON CELEBRATION ===== */
+        /* ===== SPARKLES ===== */
         .sparkle {
             position: absolute;
             pointer-events: none;
@@ -443,23 +524,12 @@
         }
 
         @keyframes sparkleAnim {
-            0% {
-                opacity: 1;
-                transform: scale(0) rotate(0deg);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2) rotate(180deg);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(0) rotate(360deg);
-            }
+            0% { opacity: 1; transform: scale(0) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+            100% { opacity: 0; transform: scale(0) rotate(360deg); }
         }
 
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -481,11 +551,25 @@
 
     <!-- Celebration Screen -->
     <div class="celebration-screen" id="celebrationScreen">
-        <img src="Lincoln with Glasses.png" alt="Our adorable dog!" class="dog-image" id="dogImage">
-        <div class="celebration-text">LET'S GOOO 🎉</div>
-        <div class="celebration-text big-chungus">BIG CHUNGUS!</div>
-        <div class="love-message">
-            I love you so much. You're my whole entire world and you're the best dog mom in the world! You go through so much in your life yet you still are able to keep moving forward, and that makes you one of the strongest and most resilient people I know. You have made me a better man, person, friend, son. I owe so much of my life to you, and I wouldn't have asked for a better woman in my life. Thank you and I love you! I'm so glad you will be my valentine this year! ❤️
+        <!-- Stage 1: Photo -->
+        <div class="photo-frame" id="photoFrame">
+            <img src="Lincoln with Glasses.png" alt="Our adorable dog!" class="dog-image" id="dogImage">
+        </div>
+
+        <!-- Stage 2: Hype text -->
+        <div class="lets-go-text" id="letsGoText">LET'S GOOO 🎉</div>
+        <div class="big-chungus-text" id="bigChungusText">LOOK IT'S BIG CHUNGUS!</div>
+
+        <!-- Stage 3: Love letter -->
+        <div class="love-card-wrapper" id="loveCardWrapper">
+            <div class="love-card">
+                <div class="love-card-quote">"</div>
+                <p>
+                    I love you so much. You're my whole entire world and you're the best dog mom in the world! You go through so much in your life yet you still are able to keep moving forward, and that makes you one of the strongest and most resilient people I know. You have made me a better man, person, friend, son. I owe so much of my life to you, and I wouldn't have asked for a better woman in my life. Thank you and I love you! I'm so glad you will be my valentine this year!
+                </p>
+                <div class="love-card-divider"></div>
+                <div class="love-card-footer">❤️ With all my love ❤️</div>
+            </div>
         </div>
     </div>
 
@@ -510,6 +594,8 @@
         const starsContainer = document.getElementById('starsContainer');
         const fireworksCanvas = document.getElementById('fireworks');
         const ctx = fireworksCanvas.getContext('2d');
+        const photoFrame = document.getElementById('photoFrame');
+        const bigChungusText = document.getElementById('bigChungusText');
 
         // ===== CREATE TWINKLING STARS =====
         function createStars() {
@@ -525,8 +611,6 @@
                 star.style.setProperty('--delay', (Math.random() * 5) + 's');
                 starsContainer.appendChild(star);
             }
-
-            // Add a few shooting stars
             for (let i = 0; i < 3; i++) {
                 const shootingStar = document.createElement('div');
                 shootingStar.className = 'shooting-star';
@@ -575,20 +659,16 @@
 
         noBtn.addEventListener('click', function(e) {
             e.stopPropagation();
-
             if (noClickCount < noTexts.length - 1) {
                 noClickCount++;
                 noBtn.textContent = noTexts[noClickCount];
-
                 noScale *= 0.9;
                 noBtn.style.transform = `scale(${noScale})`;
                 noBtn.style.padding = `${20 * noScale}px ${40 * noScale}px`;
                 noBtn.style.fontSize = `${24 * noScale}px`;
-
                 yesScale *= 1.15;
                 yesBtn.style.transform = `scale(${yesScale})`;
             }
-
             if (noClickCount >= runAwayIndex && !isRunning) {
                 isRunning = true;
                 noBtn.classList.add('running');
@@ -619,7 +699,6 @@
             const dx = btnCenterX - mouseX;
             const dy = btnCenterY - mouseY;
             const distance = Math.sqrt(dx * dx + dy * dy);
-
             if (distance < 200) {
                 const angle = Math.atan2(dy, dx);
                 let newX = btnRect.left + Math.cos(angle) * 100;
@@ -633,10 +712,27 @@
             }
         }
 
-        // ===== YES BUTTON =====
+        // ===== YES BUTTON — CINEMATIC REVEAL =====
         yesBtn.addEventListener('click', function() {
             questionScreen.classList.add('hidden');
+
+            // White flash
+            const flash = document.createElement('div');
+            flash.className = 'flash-overlay';
+            document.body.appendChild(flash);
+            setTimeout(() => flash.remove(), 1000);
+
             celebrationScreen.classList.add('active');
+
+            // After photo drop-in completes, switch to gentle float
+            setTimeout(() => {
+                photoFrame.classList.add('settled');
+            }, 2000);
+
+            // After big chungus smashes in, switch to gentle bounce
+            setTimeout(() => {
+                bigChungusText.classList.add('settled');
+            }, 3500);
 
             resizeCanvas();
             startFireworks();
@@ -676,7 +772,6 @@
             update() {
                 this.trail.push({ x: this.x, y: this.y, alpha: this.alpha });
                 if (this.trail.length > 5) this.trail.shift();
-
                 this.velocity.y += 0.08;
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
@@ -684,7 +779,6 @@
             }
 
             draw() {
-                // Draw trail
                 this.trail.forEach((point, i) => {
                     ctx.save();
                     ctx.globalAlpha = point.alpha * (i / this.trail.length) * 0.5;
@@ -694,8 +788,6 @@
                     ctx.fill();
                     ctx.restore();
                 });
-
-                // Draw main particle
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
                 ctx.fillStyle = this.color;
@@ -717,7 +809,6 @@
                 '#ff1493', '#00ffff', '#ff69b4', '#ffa500'
             ];
             const color = colors[Math.floor(Math.random() * colors.length)];
-
             const count = 40 + Math.floor(Math.random() * 30);
             for (let i = 0; i < count; i++) {
                 particles.push(new Particle(x, y, color));
@@ -736,15 +827,10 @@
             fireworksActive = true;
             fireworksCanvas.classList.add('active');
             ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
-
             for (let i = 0; i < 6; i++) {
                 setTimeout(() => createFirework(), i * 150);
             }
-
-            setInterval(() => {
-                if (fireworksActive) createFirework();
-            }, 400);
-
+            setInterval(() => { if (fireworksActive) createFirework(); }, 400);
             animateFireworks();
         }
 
@@ -775,13 +861,9 @@
                 floatingDucks.appendChild(duck);
                 setTimeout(() => duck.remove(), 14000);
             }
-
-            // Spawn initial batch
             for (let i = 0; i < 3; i++) {
                 setTimeout(() => spawnDuck(), i * 800);
             }
-
-            // Keep spawning
             setInterval(() => spawnDuck(), 2000);
         }
 
