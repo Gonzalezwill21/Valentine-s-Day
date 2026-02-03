@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Will You Be My Valentine?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,16 +13,59 @@
         }
 
         body {
-            font-family: 'Georgia', serif;
+            font-family: 'Playfair Display', 'Georgia', serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #ff6b9d 0%, #ff8a80 50%, #ff6b6b 100%);
             display: flex;
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
         }
 
-        /* Floating background hearts */
+        /* ===== TWINKLING STARS ===== */
+        .stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.6); }
+        }
+
+        /* Shooting star */
+        .shooting-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.5);
+            animation: shoot 3s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        @keyframes shoot {
+            0% { transform: translateX(0) translateY(0); opacity: 0; }
+            5% { opacity: 1; }
+            20% { transform: translateX(300px) translateY(200px); opacity: 0; }
+            100% { opacity: 0; }
+        }
+
+        /* ===== FLOATING BACKGROUND ELEMENTS ===== */
         .bg-hearts {
             position: fixed;
             top: 0;
@@ -30,51 +74,81 @@
             height: 100%;
             pointer-events: none;
             overflow: hidden;
-            z-index: 0;
+            z-index: 1;
         }
 
         .bg-heart {
             position: absolute;
-            font-size: 20px;
-            animation: floatUp 8s linear infinite;
-            opacity: 0.3;
+            animation: floatUp var(--speed) linear infinite;
+            animation-delay: var(--delay);
+            opacity: 0;
+            filter: blur(0.5px);
         }
 
         @keyframes floatUp {
             0% {
-                transform: translateY(100vh) rotate(0deg);
+                transform: translateY(100vh) translateX(0) rotate(0deg) scale(0.5);
                 opacity: 0;
             }
-            10% {
-                opacity: 0.3;
-            }
-            90% {
-                opacity: 0.3;
-            }
+            10% { opacity: 0.5; }
+            50% { transform: translateY(50vh) translateX(30px) rotate(180deg) scale(1); }
+            90% { opacity: 0.5; }
             100% {
-                transform: translateY(-100px) rotate(360deg);
+                transform: translateY(-100px) translateX(-20px) rotate(360deg) scale(0.5);
                 opacity: 0;
             }
         }
 
-        /* Question Screen */
+        /* ===== QUESTION SCREEN ===== */
         .question-screen {
             text-align: center;
             z-index: 10;
             padding: 20px;
+            position: relative;
         }
 
         .question-screen h1 {
-            font-size: clamp(2rem, 8vw, 4rem);
-            color: white;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
-            margin-bottom: 50px;
-            animation: pulse 2s ease-in-out infinite;
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            font-weight: 700;
+            color: #fff;
+            text-shadow:
+                0 0 20px rgba(255, 182, 193, 0.8),
+                0 0 40px rgba(255, 105, 135, 0.5),
+                0 0 80px rgba(255, 105, 135, 0.3),
+                3px 3px 6px rgba(0, 0, 0, 0.4);
+            margin-bottom: 20px;
+            animation: glowPulse 3s ease-in-out infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes glowPulse {
+            0%, 100% {
+                text-shadow:
+                    0 0 20px rgba(255, 182, 193, 0.8),
+                    0 0 40px rgba(255, 105, 135, 0.5),
+                    0 0 80px rgba(255, 105, 135, 0.3),
+                    3px 3px 6px rgba(0, 0, 0, 0.4);
+            }
+            50% {
+                text-shadow:
+                    0 0 30px rgba(255, 215, 0, 0.9),
+                    0 0 60px rgba(255, 182, 193, 0.6),
+                    0 0 100px rgba(255, 105, 135, 0.4),
+                    3px 3px 6px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        .decorative-divider {
+            font-size: 1.5rem;
+            margin-bottom: 40px;
+            opacity: 0.8;
+            letter-spacing: 8px;
+            animation: fadeInSlow 2s ease-out;
+        }
+
+        @keyframes fadeInSlow {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 0.8; transform: translateY(0); }
         }
 
         .buttons {
@@ -88,35 +162,54 @@
         .btn {
             padding: 20px 40px;
             font-size: 24px;
-            font-family: 'Georgia', serif;
+            font-family: 'Playfair Display', 'Georgia', serif;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
             font-weight: bold;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            position: relative;
         }
 
         .btn-yes {
-            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            background: linear-gradient(135deg, #f5af19 0%, #f12711 30%, #f5af19 60%, #ffd700 100%);
+            background-size: 200% 200%;
+            animation: shimmerGold 3s ease-in-out infinite;
             color: white;
             transform: scale(1);
+            box-shadow:
+                0 8px 25px rgba(245, 175, 25, 0.5),
+                0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes shimmerGold {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .btn-yes:hover {
             transform: scale(1.1);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            box-shadow:
+                0 12px 40px rgba(245, 175, 25, 0.7),
+                0 0 50px rgba(255, 215, 0, 0.5);
         }
 
         .btn-no {
-            background: linear-gradient(135deg, #f44336 0%, #ff7043 100%);
+            background: linear-gradient(135deg, #8b0000 0%, #dc143c 50%, #8b0000 100%);
             color: white;
             transform: scale(1);
-            position: relative;
+            box-shadow: 0 8px 25px rgba(139, 0, 0, 0.5);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 8px 25px rgba(139, 0, 0, 0.5); }
+            50% { box-shadow: 0 8px 25px rgba(220, 20, 60, 0.8), 0 0 20px rgba(220, 20, 60, 0.3); }
         }
 
         .btn-no:hover {
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 12px 35px rgba(220, 20, 60, 0.8);
         }
 
         .btn-no.running {
@@ -124,7 +217,7 @@
             transition: left 0.1s ease-out, top 0.1s ease-out;
         }
 
-        /* Celebration Screen */
+        /* ===== CELEBRATION SCREEN ===== */
         .celebration-screen {
             display: none;
             position: fixed;
@@ -132,7 +225,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(135deg, #ff6b9d, #c44dff, #6b5bff, #ff6b9d);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
             z-index: 100;
             justify-content: flex-start;
             align-items: center;
@@ -140,6 +235,14 @@
             text-align: center;
             padding: 40px 20px;
             overflow-y: auto;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 50% 100%; }
+            75% { background-position: 0% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .celebration-screen.active {
@@ -150,7 +253,9 @@
             max-width: 300px;
             max-height: 300px;
             border-radius: 20px;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            box-shadow:
+                0 15px 50px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(255, 255, 255, 0.3);
             animation: bounce 1s ease-in-out infinite;
             margin-bottom: 30px;
             border: 5px solid white;
@@ -162,9 +267,12 @@
         }
 
         .celebration-text {
+            font-family: 'Dancing Script', cursive;
             font-size: clamp(2.5rem, 10vw, 5rem);
             color: white;
-            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+            text-shadow:
+                4px 4px 8px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(255, 255, 255, 0.3);
             margin: 15px 0;
             animation: rainbow 2s linear infinite, shake 0.5s ease-in-out infinite;
         }
@@ -184,6 +292,7 @@
         }
 
         .big-chungus {
+            font-family: 'Playfair Display', serif;
             font-size: clamp(3rem, 12vw, 6rem);
             font-weight: bold;
             animation: rainbow 1s linear infinite, megaBounce 0.3s ease-in-out infinite;
@@ -204,9 +313,10 @@
             padding: 30px;
             background: rgba(255, 255, 255, 0.15);
             border-radius: 20px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             animation: fadeInUp 2s ease-out;
-            font-family: 'Georgia', serif;
+            font-family: 'Playfair Display', 'Georgia', serif;
         }
 
         @keyframes fadeInUp {
@@ -220,7 +330,7 @@
             }
         }
 
-        /* Fireworks Canvas */
+        /* ===== FIREWORKS CANVAS ===== */
         #fireworks {
             position: fixed;
             top: 0;
@@ -236,7 +346,7 @@
             display: block;
         }
 
-        /* Celebration Hearts */
+        /* ===== CELEBRATION HEARTS ===== */
         .celebration-hearts {
             position: fixed;
             top: 0;
@@ -269,18 +379,100 @@
             }
         }
 
+        /* ===== FLOATING DUCKS ===== */
+        .floating-ducks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 103;
+            overflow: hidden;
+        }
+
+        .duck {
+            position: absolute;
+            animation: duckSwim var(--swim-speed) linear infinite;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes duckSwim {
+            0% {
+                transform: translateX(-80px) translateY(0) scaleX(1);
+                opacity: 0;
+            }
+            5% { opacity: 1; }
+            25% { transform: translateX(25vw) translateY(-20px) scaleX(1); }
+            50% { transform: translateX(50vw) translateY(15px) scaleX(1); }
+            75% { transform: translateX(75vw) translateY(-10px) scaleX(1); }
+            95% { opacity: 1; }
+            100% {
+                transform: translateX(105vw) translateY(5px) scaleX(1);
+                opacity: 0;
+            }
+        }
+
+        /* Some ducks swim right-to-left */
+        .duck.reverse {
+            animation-name: duckSwimReverse;
+        }
+
+        @keyframes duckSwimReverse {
+            0% {
+                transform: translateX(105vw) translateY(0) scaleX(-1);
+                opacity: 0;
+            }
+            5% { opacity: 1; }
+            25% { transform: translateX(75vw) translateY(-15px) scaleX(-1); }
+            50% { transform: translateX(50vw) translateY(20px) scaleX(-1); }
+            75% { transform: translateX(25vw) translateY(-10px) scaleX(-1); }
+            95% { opacity: 1; }
+            100% {
+                transform: translateX(-80px) translateY(5px) scaleX(-1);
+                opacity: 0;
+            }
+        }
+
+        /* ===== SPARKLES ON CELEBRATION ===== */
+        .sparkle {
+            position: absolute;
+            pointer-events: none;
+            animation: sparkleAnim 1.5s ease-out forwards;
+            font-size: 16px;
+        }
+
+        @keyframes sparkleAnim {
+            0% {
+                opacity: 1;
+                transform: scale(0) rotate(0deg);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2) rotate(180deg);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) rotate(360deg);
+            }
+        }
+
         .hidden {
             display: none !important;
         }
     </style>
 </head>
 <body>
+    <!-- Twinkling Stars -->
+    <div class="stars-container" id="starsContainer"></div>
+
     <!-- Background Hearts -->
     <div class="bg-hearts" id="bgHearts"></div>
 
     <!-- Question Screen -->
     <div class="question-screen" id="questionScreen">
         <h1>Will you be my Valentine? 💕</h1>
+        <div class="decorative-divider">🌹 ✨ 🌹 ✨ 🌹</div>
         <div class="buttons">
             <button class="btn btn-yes" id="yesBtn">Yes!</button>
             <button class="btn btn-no" id="noBtn">No</button>
@@ -303,18 +495,67 @@
     <!-- Celebration Hearts Container -->
     <div class="celebration-hearts" id="celebrationHearts"></div>
 
+    <!-- Floating Ducks Container -->
+    <div class="floating-ducks" id="floatingDucks"></div>
+
     <script>
-        // Elements
+        // ===== ELEMENTS =====
         const yesBtn = document.getElementById('yesBtn');
         const noBtn = document.getElementById('noBtn');
         const questionScreen = document.getElementById('questionScreen');
         const celebrationScreen = document.getElementById('celebrationScreen');
         const bgHearts = document.getElementById('bgHearts');
         const celebrationHearts = document.getElementById('celebrationHearts');
+        const floatingDucks = document.getElementById('floatingDucks');
+        const starsContainer = document.getElementById('starsContainer');
         const fireworksCanvas = document.getElementById('fireworks');
         const ctx = fireworksCanvas.getContext('2d');
 
-        // NO button texts - starts running at index 4 (after "Don't be like this")
+        // ===== CREATE TWINKLING STARS =====
+        function createStars() {
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
+                star.style.setProperty('--delay', (Math.random() * 5) + 's');
+                starsContainer.appendChild(star);
+            }
+
+            // Add a few shooting stars
+            for (let i = 0; i < 3; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                shootingStar.style.top = (10 + Math.random() * 40) + '%';
+                shootingStar.style.left = (Math.random() * 60) + '%';
+                shootingStar.style.animationDelay = (i * 4 + Math.random() * 3) + 's';
+                shootingStar.style.animationDuration = (2 + Math.random() * 2) + 's';
+                starsContainer.appendChild(shootingStar);
+            }
+        }
+        createStars();
+
+        // ===== CREATE BACKGROUND HEARTS =====
+        function createBgHearts() {
+            const emojis = ['❤️', '💕', '✨', '🌹', '💖', '🌟'];
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'bg-heart';
+                heart.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.setProperty('--delay', (Math.random() * 10) + 's');
+                heart.style.setProperty('--speed', (6 + Math.random() * 6) + 's');
+                heart.style.fontSize = (14 + Math.random() * 22) + 'px';
+                bgHearts.appendChild(heart);
+            }
+        }
+        createBgHearts();
+
+        // ===== NO BUTTON LOGIC =====
         const noTexts = [
             "No",
             "Are you sure?",
@@ -323,7 +564,7 @@
             "Don't be like this",
             "Enough!"
         ];
-        const runAwayIndex = 4; // Start running after "Don't be like this"
+        const runAwayIndex = 4;
 
         let noClickCount = 0;
         let yesScale = 1;
@@ -332,22 +573,6 @@
         let mouseX = 0;
         let mouseY = 0;
 
-        // Create background hearts
-        function createBgHearts() {
-            for (let i = 0; i < 20; i++) {
-                const heart = document.createElement('div');
-                heart.className = 'bg-heart';
-                heart.innerHTML = '❤️';
-                heart.style.left = Math.random() * 100 + '%';
-                heart.style.animationDelay = Math.random() * 8 + 's';
-                heart.style.fontSize = (15 + Math.random() * 20) + 'px';
-                bgHearts.appendChild(heart);
-            }
-        }
-
-        createBgHearts();
-
-        // NO button click handler
         noBtn.addEventListener('click', function(e) {
             e.stopPropagation();
 
@@ -355,18 +580,15 @@
                 noClickCount++;
                 noBtn.textContent = noTexts[noClickCount];
 
-                // Shrink NO button (less aggressive shrinking)
                 noScale *= 0.9;
                 noBtn.style.transform = `scale(${noScale})`;
                 noBtn.style.padding = `${20 * noScale}px ${40 * noScale}px`;
                 noBtn.style.fontSize = `${24 * noScale}px`;
 
-                // Grow YES button
                 yesScale *= 1.15;
                 yesBtn.style.transform = `scale(${yesScale})`;
             }
 
-            // Start running away earlier (at runAwayIndex)
             if (noClickCount >= runAwayIndex && !isRunning) {
                 isRunning = true;
                 noBtn.classList.add('running');
@@ -375,25 +597,18 @@
             }
         });
 
-        // Mouse tracking for running button
+        // ===== MOUSE TRACKING =====
         document.addEventListener('mousemove', function(e) {
             mouseX = e.clientX;
             mouseY = e.clientY;
-
-            if (isRunning) {
-                runAway();
-            }
+            if (isRunning) runAway();
         });
 
-        // Touch support for mobile
         document.addEventListener('touchmove', function(e) {
             if (e.touches.length > 0) {
                 mouseX = e.touches[0].clientX;
                 mouseY = e.touches[0].clientY;
-
-                if (isRunning) {
-                    runAway();
-                }
+                if (isRunning) runAway();
             }
         });
 
@@ -401,44 +616,36 @@
             const btnRect = noBtn.getBoundingClientRect();
             const btnCenterX = btnRect.left + btnRect.width / 2;
             const btnCenterY = btnRect.top + btnRect.height / 2;
-
             const dx = btnCenterX - mouseX;
             const dy = btnCenterY - mouseY;
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance < 200) {
                 const angle = Math.atan2(dy, dx);
-                const moveDistance = 100;
-
-                let newX = btnRect.left + Math.cos(angle) * moveDistance;
-                let newY = btnRect.top + Math.sin(angle) * moveDistance;
-
-                // Keep within viewport
+                let newX = btnRect.left + Math.cos(angle) * 100;
+                let newY = btnRect.top + Math.sin(angle) * 100;
                 const maxX = window.innerWidth - btnRect.width - 10;
                 const maxY = window.innerHeight - btnRect.height - 10;
-
                 newX = Math.max(10, Math.min(maxX, newX));
                 newY = Math.max(10, Math.min(maxY, newY));
-
                 noBtn.style.left = newX + 'px';
                 noBtn.style.top = newY + 'px';
             }
         }
 
-        // YES button click handler
+        // ===== YES BUTTON =====
         yesBtn.addEventListener('click', function() {
             questionScreen.classList.add('hidden');
             celebrationScreen.classList.add('active');
 
-            // Start fireworks
             resizeCanvas();
             startFireworks();
-
-            // Start celebration hearts
             startCelebrationHearts();
+            startFloatingDucks();
+            startSparkles();
         });
 
-        // Fireworks
+        // ===== FIREWORKS =====
         fireworksCanvas.width = window.innerWidth;
         fireworksCanvas.height = window.innerHeight;
 
@@ -446,7 +653,6 @@
             fireworksCanvas.width = window.innerWidth;
             fireworksCanvas.height = window.innerHeight;
         }
-
         window.addEventListener('resize', resizeCanvas);
 
         let particles = [];
@@ -458,25 +664,43 @@
                 this.y = y;
                 this.color = color;
                 this.velocity = {
-                    x: (Math.random() - 0.5) * 10,
-                    y: (Math.random() - 0.5) * 10
+                    x: (Math.random() - 0.5) * 12,
+                    y: (Math.random() - 0.5) * 12
                 };
                 this.alpha = 1;
-                this.decay = 0.015 + Math.random() * 0.01;
-                this.size = 3 + Math.random() * 3;
+                this.decay = 0.012 + Math.random() * 0.008;
+                this.size = 3 + Math.random() * 4;
+                this.trail = [];
             }
 
             update() {
-                this.velocity.y += 0.1; // gravity
+                this.trail.push({ x: this.x, y: this.y, alpha: this.alpha });
+                if (this.trail.length > 5) this.trail.shift();
+
+                this.velocity.y += 0.08;
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
                 this.alpha -= this.decay;
             }
 
             draw() {
+                // Draw trail
+                this.trail.forEach((point, i) => {
+                    ctx.save();
+                    ctx.globalAlpha = point.alpha * (i / this.trail.length) * 0.5;
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, this.size * 0.5, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                });
+
+                // Draw main particle
                 ctx.save();
                 ctx.globalAlpha = this.alpha;
                 ctx.fillStyle = this.color;
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = this.color;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                 ctx.fill();
@@ -487,27 +711,24 @@
         function createFirework() {
             const x = Math.random() * fireworksCanvas.width;
             const y = Math.random() * (fireworksCanvas.height * 0.5);
-            const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff85a2', '#a855f7', '#f97316'];
+            const colors = [
+                '#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff',
+                '#ff85a2', '#a855f7', '#f97316', '#ffd700',
+                '#ff1493', '#00ffff', '#ff69b4', '#ffa500'
+            ];
             const color = colors[Math.floor(Math.random() * colors.length)];
 
-            for (let i = 0; i < 50; i++) {
+            const count = 40 + Math.floor(Math.random() * 30);
+            for (let i = 0; i < count; i++) {
                 particles.push(new Particle(x, y, color));
             }
         }
 
         function animateFireworks() {
             if (!fireworksActive) return;
-
-            // Clear with transparency instead of black
             ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
-
             particles = particles.filter(p => p.alpha > 0);
-
-            particles.forEach(p => {
-                p.update();
-                p.draw();
-            });
-
+            particles.forEach(p => { p.update(); p.draw(); });
             requestAnimationFrame(animateFireworks);
         }
 
@@ -516,22 +737,18 @@
             fireworksCanvas.classList.add('active');
             ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
 
-            // Create initial fireworks
-            for (let i = 0; i < 5; i++) {
-                setTimeout(() => createFirework(), i * 200);
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => createFirework(), i * 150);
             }
 
-            // Keep creating fireworks
             setInterval(() => {
-                if (fireworksActive) {
-                    createFirework();
-                }
-            }, 500);
+                if (fireworksActive) createFirework();
+            }, 400);
 
             animateFireworks();
         }
 
-        // Celebration hearts
+        // ===== CELEBRATION HEARTS =====
         function startCelebrationHearts() {
             setInterval(() => {
                 const heart = document.createElement('div');
@@ -541,12 +758,48 @@
                 heart.style.fontSize = (20 + Math.random() * 30) + 'px';
                 heart.style.animationDuration = (3 + Math.random() * 3) + 's';
                 celebrationHearts.appendChild(heart);
+                setTimeout(() => heart.remove(), 6000);
+            }, 250);
+        }
 
-                // Remove after animation
-                setTimeout(() => {
-                    heart.remove();
-                }, 6000);
-            }, 200);
+        // ===== FLOATING DUCKS =====
+        function startFloatingDucks() {
+            function spawnDuck() {
+                const duck = document.createElement('div');
+                duck.className = 'duck' + (Math.random() > 0.5 ? ' reverse' : '');
+                duck.innerHTML = '🦆';
+                duck.style.top = (15 + Math.random() * 70) + '%';
+                duck.style.fontSize = (25 + Math.random() * 30) + 'px';
+                duck.style.setProperty('--swim-speed', (6 + Math.random() * 6) + 's');
+                duck.style.setProperty('--delay', '0s');
+                floatingDucks.appendChild(duck);
+                setTimeout(() => duck.remove(), 14000);
+            }
+
+            // Spawn initial batch
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => spawnDuck(), i * 800);
+            }
+
+            // Keep spawning
+            setInterval(() => spawnDuck(), 2000);
+        }
+
+        // ===== SPARKLES =====
+        function startSparkles() {
+            setInterval(() => {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.innerHTML = ['✨', '⭐', '💫'][Math.floor(Math.random() * 3)];
+                sparkle.style.left = Math.random() * 100 + '%';
+                sparkle.style.top = Math.random() * 100 + '%';
+                sparkle.style.position = 'fixed';
+                sparkle.style.zIndex = '104';
+                sparkle.style.pointerEvents = 'none';
+                sparkle.style.fontSize = (12 + Math.random() * 20) + 'px';
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 1500);
+            }, 150);
         }
     </script>
 </body>
