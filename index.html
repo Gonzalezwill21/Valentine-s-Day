@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine?</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ff8a80 50%, #ff6b6b 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Floating background hearts */
+        .bg-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-heart {
+            position: absolute;
+            font-size: 20px;
+            animation: floatUp 8s linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Question Screen */
+        .question-screen {
+            text-align: center;
+            z-index: 10;
+            padding: 20px;
+        }
+
+        .question-screen h1 {
+            font-size: clamp(2rem, 8vw, 4rem);
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            margin-bottom: 50px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 20px 40px;
+            font-size: 24px;
+            font-family: 'Georgia', serif;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            color: white;
+            transform: scale(1);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #f44336 0%, #ff7043 100%);
+            color: white;
+            transform: scale(1);
+            position: relative;
+        }
+
+        .btn-no:hover {
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn-no.running {
+            position: fixed;
+            transition: left 0.1s ease-out, top 0.1s ease-out;
+        }
+
+        /* Celebration Screen */
+        .celebration-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .celebration-screen.active {
+            display: flex;
+        }
+
+        .dog-image {
+            max-width: 300px;
+            max-height: 300px;
+            border-radius: 20px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            animation: bounce 1s ease-in-out infinite;
+            margin-bottom: 30px;
+            border: 5px solid white;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .celebration-text {
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            color: white;
+            text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+            margin: 15px 0;
+            animation: rainbow 2s linear infinite, shake 0.5s ease-in-out infinite;
+        }
+
+        @keyframes rainbow {
+            0% { color: #ff6b6b; }
+            25% { color: #ffd93d; }
+            50% { color: #6bcb77; }
+            75% { color: #4d96ff; }
+            100% { color: #ff6b6b; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0) rotate(0); }
+            25% { transform: translateX(-5px) rotate(-2deg); }
+            75% { transform: translateX(5px) rotate(2deg); }
+        }
+
+        .big-chungus {
+            font-size: clamp(3rem, 12vw, 6rem);
+            font-weight: bold;
+            animation: rainbow 1s linear infinite, megaBounce 0.3s ease-in-out infinite;
+        }
+
+        @keyframes megaBounce {
+            0%, 100% { transform: scale(1) rotate(-2deg); }
+            50% { transform: scale(1.1) rotate(2deg); }
+        }
+
+        /* Fireworks Canvas */
+        #fireworks {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            display: none;
+        }
+
+        #fireworks.active {
+            display: block;
+        }
+
+        /* Celebration Hearts */
+        .celebration-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 102;
+            overflow: hidden;
+        }
+
+        .celebration-heart {
+            position: absolute;
+            font-size: 30px;
+            animation: celebrateFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes celebrateFloat {
+            0% {
+                transform: translateY(100vh) scale(0) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 1;
+                transform: translateY(80vh) scale(1) rotate(45deg);
+            }
+            100% {
+                transform: translateY(-100px) scale(1.5) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Hearts -->
+    <div class="bg-hearts" id="bgHearts"></div>
+
+    <!-- Question Screen -->
+    <div class="question-screen" id="questionScreen">
+        <h1>Will you be my Valentine? 💕</h1>
+        <div class="buttons">
+            <button class="btn btn-yes" id="yesBtn">Yes!</button>
+            <button class="btn btn-no" id="noBtn">No</button>
+        </div>
+    </div>
+
+    <!-- Celebration Screen -->
+    <div class="celebration-screen" id="celebrationScreen">
+        <img src="Lincoln with Glasses.png" alt="Our adorable dog!" class="dog-image" id="dogImage">
+        <div class="celebration-text">LET'S GOOO 🎉</div>
+        <div class="celebration-text big-chungus">BIG CHUNGUS!</div>
+    </div>
+
+    <!-- Fireworks Canvas -->
+    <canvas id="fireworks"></canvas>
+
+    <!-- Celebration Hearts Container -->
+    <div class="celebration-hearts" id="celebrationHearts"></div>
+
+    <script>
+        // Elements
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const questionScreen = document.getElementById('questionScreen');
+        const celebrationScreen = document.getElementById('celebrationScreen');
+        const bgHearts = document.getElementById('bgHearts');
+        const celebrationHearts = document.getElementById('celebrationHearts');
+        const fireworksCanvas = document.getElementById('fireworks');
+        const ctx = fireworksCanvas.getContext('2d');
+
+        // NO button texts - starts running at index 4 (after "Don't be like this")
+        const noTexts = [
+            "No",
+            "Are you sure?",
+            "Please? 🥺",
+            "Come on honey",
+            "Don't be like this",
+            "Enough!"
+        ];
+        const runAwayIndex = 4; // Start running after "Don't be like this"
+
+        let noClickCount = 0;
+        let yesScale = 1;
+        let noScale = 1;
+        let isRunning = false;
+        let mouseX = 0;
+        let mouseY = 0;
+
+        // Create background hearts
+        function createBgHearts() {
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'bg-heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 8 + 's';
+                heart.style.fontSize = (15 + Math.random() * 20) + 'px';
+                bgHearts.appendChild(heart);
+            }
+        }
+
+        createBgHearts();
+
+        // NO button click handler
+        noBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+
+            if (noClickCount < noTexts.length - 1) {
+                noClickCount++;
+                noBtn.textContent = noTexts[noClickCount];
+
+                // Shrink NO button (less aggressive shrinking)
+                noScale *= 0.9;
+                noBtn.style.transform = `scale(${noScale})`;
+                noBtn.style.padding = `${20 * noScale}px ${40 * noScale}px`;
+                noBtn.style.fontSize = `${24 * noScale}px`;
+
+                // Grow YES button
+                yesScale *= 1.15;
+                yesBtn.style.transform = `scale(${yesScale})`;
+            }
+
+            // Start running away earlier (at runAwayIndex)
+            if (noClickCount >= runAwayIndex && !isRunning) {
+                isRunning = true;
+                noBtn.classList.add('running');
+                noBtn.style.left = noBtn.getBoundingClientRect().left + 'px';
+                noBtn.style.top = noBtn.getBoundingClientRect().top + 'px';
+            }
+        });
+
+        // Mouse tracking for running button
+        document.addEventListener('mousemove', function(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+
+            if (isRunning) {
+                runAway();
+            }
+        });
+
+        // Touch support for mobile
+        document.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 0) {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+
+                if (isRunning) {
+                    runAway();
+                }
+            }
+        });
+
+        function runAway() {
+            const btnRect = noBtn.getBoundingClientRect();
+            const btnCenterX = btnRect.left + btnRect.width / 2;
+            const btnCenterY = btnRect.top + btnRect.height / 2;
+
+            const dx = btnCenterX - mouseX;
+            const dy = btnCenterY - mouseY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 200) {
+                const angle = Math.atan2(dy, dx);
+                const moveDistance = 100;
+
+                let newX = btnRect.left + Math.cos(angle) * moveDistance;
+                let newY = btnRect.top + Math.sin(angle) * moveDistance;
+
+                // Keep within viewport
+                const maxX = window.innerWidth - btnRect.width - 10;
+                const maxY = window.innerHeight - btnRect.height - 10;
+
+                newX = Math.max(10, Math.min(maxX, newX));
+                newY = Math.max(10, Math.min(maxY, newY));
+
+                noBtn.style.left = newX + 'px';
+                noBtn.style.top = newY + 'px';
+            }
+        }
+
+        // YES button click handler
+        yesBtn.addEventListener('click', function() {
+            questionScreen.classList.add('hidden');
+            celebrationScreen.classList.add('active');
+
+            // Start fireworks
+            resizeCanvas();
+            startFireworks();
+
+            // Start celebration hearts
+            startCelebrationHearts();
+        });
+
+        // Fireworks
+        fireworksCanvas.width = window.innerWidth;
+        fireworksCanvas.height = window.innerHeight;
+
+        function resizeCanvas() {
+            fireworksCanvas.width = window.innerWidth;
+            fireworksCanvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+
+        let particles = [];
+        let fireworksActive = false;
+
+        class Particle {
+            constructor(x, y, color) {
+                this.x = x;
+                this.y = y;
+                this.color = color;
+                this.velocity = {
+                    x: (Math.random() - 0.5) * 10,
+                    y: (Math.random() - 0.5) * 10
+                };
+                this.alpha = 1;
+                this.decay = 0.015 + Math.random() * 0.01;
+                this.size = 3 + Math.random() * 3;
+            }
+
+            update() {
+                this.velocity.y += 0.1; // gravity
+                this.x += this.velocity.x;
+                this.y += this.velocity.y;
+                this.alpha -= this.decay;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function createFirework() {
+            const x = Math.random() * fireworksCanvas.width;
+            const y = Math.random() * (fireworksCanvas.height * 0.5);
+            const colors = ['#ff6b6b', '#ffd93d', '#6bcb77', '#4d96ff', '#ff85a2', '#a855f7', '#f97316'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+
+            for (let i = 0; i < 50; i++) {
+                particles.push(new Particle(x, y, color));
+            }
+        }
+
+        function animateFireworks() {
+            if (!fireworksActive) return;
+
+            // Clear with transparency instead of black
+            ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+
+            particles = particles.filter(p => p.alpha > 0);
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animateFireworks);
+        }
+
+        function startFireworks() {
+            fireworksActive = true;
+            fireworksCanvas.classList.add('active');
+            ctx.clearRect(0, 0, fireworksCanvas.width, fireworksCanvas.height);
+
+            // Create initial fireworks
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => createFirework(), i * 200);
+            }
+
+            // Keep creating fireworks
+            setInterval(() => {
+                if (fireworksActive) {
+                    createFirework();
+                }
+            }, 500);
+
+            animateFireworks();
+        }
+
+        // Celebration hearts
+        function startCelebrationHearts() {
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'celebration-heart';
+                heart.innerHTML = ['❤️', '💕', '💖', '💗', '💓', '💝', '💘'][Math.floor(Math.random() * 7)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.fontSize = (20 + Math.random() * 30) + 'px';
+                heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+                celebrationHearts.appendChild(heart);
+
+                // Remove after animation
+                setTimeout(() => {
+                    heart.remove();
+                }, 6000);
+            }, 200);
+        }
+    </script>
+</body>
+</html>
