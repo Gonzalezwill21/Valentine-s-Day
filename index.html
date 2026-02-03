@@ -210,27 +210,75 @@
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: linear-gradient(135deg, #1a0a2e, #2d1b69, #44107a, #67318e);
-            background-size: 400% 400%;
-            animation: gradientShift 10s ease infinite;
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
             z-index: 100;
-            justify-content: flex-start;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-            padding: 30px 20px;
             overflow-y: auto;
+            overflow-x: hidden;
         }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            25% { background-position: 100% 0%; }
-            50% { background-position: 50% 100%; }
-            75% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .celebration-screen.active { display: block; }
+
+        /* Stars layer for celebration screen */
+        .celebration-stars {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .celebration-screen.active { display: flex; }
+        /* Hero section: photo + hype text centered on screen */
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 30px 20px;
+        }
+
+        /* Love letter section: separate visual area */
+        .letter-section {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px 60px;
+            /* Subtle gradient overlay to differentiate from hero */
+            background: linear-gradient(180deg,
+                transparent 0%,
+                rgba(139, 69, 100, 0.08) 20%,
+                rgba(139, 69, 100, 0.12) 50%,
+                rgba(139, 69, 100, 0.08) 80%,
+                transparent 100%);
+        }
+
+        .scroll-hint {
+            animation: scrollHintAnim 2s ease-in-out infinite, riseIn 1s ease-out 4.5s both;
+            font-size: 1.8rem;
+            margin-top: 20px;
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        @keyframes scrollHintAnim {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(8px); }
+        }
+
+        .letter-heading {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            color: rgba(255, 215, 0, 0.85);
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease-out;
+            letter-spacing: 2px;
+        }
 
         /* White flash overlay */
         .flash-overlay {
@@ -371,12 +419,19 @@
             75% { transform: scale(1.03) rotate(0.5deg); }
         }
 
-        /* Stage 3: Love message card */
+        /* Love message card */
         .love-card-wrapper {
-            animation: riseIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3.5s both;
             margin-bottom: 40px;
             width: 100%;
             max-width: 620px;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .love-card-wrapper.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         @keyframes riseIn {
@@ -551,24 +606,34 @@
 
     <!-- Celebration Screen -->
     <div class="celebration-screen" id="celebrationScreen">
-        <!-- Stage 1: Photo -->
-        <div class="photo-frame" id="photoFrame">
-            <img src="Lincoln with Glasses.png" alt="Our adorable dog!" class="dog-image" id="dogImage">
+        <!-- Starry background for celebration -->
+        <div class="celebration-stars" id="celebrationStars"></div>
+
+        <!-- HERO: Photo + Hype text centered on screen -->
+        <div class="hero-section">
+            <div class="lets-go-text" id="letsGoText">LET'S GOOO 🎉</div>
+
+            <div class="photo-frame" id="photoFrame">
+                <img src="Lincoln with Glasses.png" alt="Our adorable dog!" class="dog-image" id="dogImage">
+            </div>
+
+            <div class="big-chungus-text" id="bigChungusText">LOOK IT'S BIG CHUNGUS!</div>
+
+            <div class="scroll-hint">↓</div>
         </div>
 
-        <!-- Stage 2: Hype text -->
-        <div class="lets-go-text" id="letsGoText">LET'S GOOO 🎉</div>
-        <div class="big-chungus-text" id="bigChungusText">LOOK IT'S BIG CHUNGUS!</div>
-
-        <!-- Stage 3: Love letter -->
-        <div class="love-card-wrapper" id="loveCardWrapper">
-            <div class="love-card">
-                <div class="love-card-quote">"</div>
-                <p>
-                    I love you so much. You're my whole entire world and you're the best dog mom in the world! You go through so much in your life yet you still are able to keep moving forward, and that makes you one of the strongest and most resilient people I know. You have made me a better man, person, friend, son. I owe so much of my life to you, and I wouldn't have asked for a better woman in my life. Thank you and I love you! I'm so glad you will be my valentine this year!
-                </p>
-                <div class="love-card-divider"></div>
-                <div class="love-card-footer">❤️ With all my love ❤️</div>
+        <!-- LOVE LETTER: Separate elegant section -->
+        <div class="letter-section">
+            <div class="letter-heading">A letter for you...</div>
+            <div class="love-card-wrapper" id="loveCardWrapper">
+                <div class="love-card">
+                    <div class="love-card-quote">"</div>
+                    <p>
+                        I love you so much. You're my whole entire world and you're the best dog mom in the world! You go through so much in your life yet you still are able to keep moving forward, and that makes you one of the strongest and most resilient people I know. You have made me a better man, person, friend, son. I owe so much of my life to you, and I wouldn't have asked for a better woman in my life. Thank you and I love you! I'm so glad you will be my valentine this year!
+                    </p>
+                    <div class="love-card-divider"></div>
+                    <div class="love-card-footer">❤️ With all my love ❤️</div>
+                </div>
             </div>
         </div>
     </div>
@@ -596,6 +661,8 @@
         const ctx = fireworksCanvas.getContext('2d');
         const photoFrame = document.getElementById('photoFrame');
         const bigChungusText = document.getElementById('bigChungusText');
+        const celebrationStars = document.getElementById('celebrationStars');
+        const loveCardWrapper = document.getElementById('loveCardWrapper');
 
         // ===== CREATE TWINKLING STARS =====
         function createStars() {
@@ -712,6 +779,44 @@
             }
         }
 
+        // ===== CREATE CELEBRATION STARS =====
+        function createCelebrationStars() {
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const size = Math.random() * 3 + 1;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', (2 + Math.random() * 4) + 's');
+                star.style.setProperty('--delay', (Math.random() * 5) + 's');
+                celebrationStars.appendChild(star);
+            }
+            for (let i = 0; i < 4; i++) {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                shootingStar.style.top = (5 + Math.random() * 50) + '%';
+                shootingStar.style.left = (Math.random() * 60) + '%';
+                shootingStar.style.animationDelay = (i * 3 + Math.random() * 2) + 's';
+                shootingStar.style.animationDuration = (2 + Math.random() * 2) + 's';
+                celebrationStars.appendChild(shootingStar);
+            }
+        }
+
+        // ===== SCROLL-TRIGGERED REVEAL =====
+        function setupScrollReveal() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            observer.observe(loveCardWrapper);
+        }
+
         // ===== YES BUTTON — CINEMATIC REVEAL =====
         yesBtn.addEventListener('click', function() {
             questionScreen.classList.add('hidden');
@@ -723,6 +828,8 @@
             setTimeout(() => flash.remove(), 1000);
 
             celebrationScreen.classList.add('active');
+            createCelebrationStars();
+            setupScrollReveal();
 
             // After photo drop-in completes, switch to gentle float
             setTimeout(() => {
